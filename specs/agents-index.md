@@ -12,7 +12,7 @@ This file lists every AI agent in the system, the prompt file it runs from, the 
 
 | | |
 |---|---|
-| **Prompt file** | `prompts/orchestrator.md` |
+| **Prompt file** | `.claude/agents/orchestrator.md` |
 | **Model** | `claude-sonnet-4-6` |
 | **Spawned by** | User script (`vatic inbox`) |
 | **Runs** | Once per `vatic inbox` invocation |
@@ -27,7 +27,7 @@ Does not write files. Does not decide create-vs-update. Does not read existing v
 
 | | |
 |---|---|
-| **Prompt file** | `prompts/quick-search.md` |
+| **Prompt file** | `.claude/agents/quick-search.md` |
 | **Model** | `claude-haiku-4-5-20251001` |
 | **Spawned by** | Orchestrator (via `Agent` tool, in parallel) |
 | **Runs** | Once per inbox file |
@@ -40,7 +40,7 @@ Given the content of one inbox file, generates search queries and runs them agai
 
 | | |
 |---|---|
-| **Prompt file** | `prompts/editor.md` |
+| **Prompt file** | `.claude/agents/editor.md` |
 | **Model** | `claude-sonnet-4-6` |
 | **Spawned by** | User script (one `nono run` per inbox file, in parallel) |
 | **Runs** | Once per inbox file |
@@ -55,7 +55,7 @@ Upgrade to `claude-opus-4-7` if output quality on complex multi-topic articles i
 
 | | |
 |---|---|
-| **Prompt file** | `prompts/qa-search.md` |
+| **Prompt file** | `.claude/agents/qa-search.md` |
 | **Model** | `claude-haiku-4-5-20251001` |
 | **Spawned by** | Q&A Composer (via `Agent` tool) |
 | **Runs** | Once per `vatic ask` invocation |
@@ -68,7 +68,7 @@ Given a question, generates search queries, runs them via the obsidian CLI, read
 
 | | |
 |---|---|
-| **Prompt file** | `prompts/qa-composer.md` |
+| **Prompt file** | `.claude/agents/qa-composer.md` |
 | **Model** | `claude-sonnet-4-6` |
 | **Spawned by** | User script (`vatic ask`) |
 | **Runs** | Once per `vatic ask` invocation |
@@ -91,16 +91,41 @@ These tasks are deterministic enough to implement without AI. Keeping them as sc
 
 ---
 
-## Prompt file frontmatter
+## Agent file frontmatter
 
-Every prompt file in `prompts/` carries frontmatter that the launch script reads to select the correct model and pass any static configuration:
+Agent files live in `.claude/agents/` and use the [Claude Code sub-agent frontmatter format](https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields.md). The markdown body below the frontmatter becomes the agent's system prompt.
 
 ```yaml
 ---
+name: quick-search
+description: Finds vault files related to a single inbox file. Given an inbox file path and its content, runs obsidian searches and returns a JSON list of related vault file paths.
 model: claude-haiku-4-5-20251001
-agent: quick-search
-spawned-by: orchestrator
+effort: low
+tools:
+  - Bash
+disallowedTools:
+  - Write
+  - Edit
+maxTurns: 30
 ---
 ```
 
-The script passes the `model` value to `claude --model <model> --print`.
+| Field | Purpose |
+|---|---|
+| `name` | Unique identifier (required) |
+| `description` | When Claude should delegate to this agent (required) |
+| `model` | Full model ID or short name (`sonnet`, `opus`, `haiku`) |
+| `effort` | `low` · `medium` · `high` · `max` — controls thinking depth and token spend |
+| `tools` | Explicit allowlist of tools the agent may use |
+| `disallowedTools` | Tools to deny even if inherited |
+| `maxTurns` | Cap on agentic turns to prevent runaway agents |
+
+### Effort and tool budget per agent
+
+| Agent | Model | Effort | Tools | Est. obsidian calls |
+|---|---|---|---|---|
+| Orchestrator | Sonnet 4.6 | `low` | `Agent` | 0 (delegates) |
+| Quick Search | Haiku 4.5 | `low` | `Bash` | ~10–20 |
+| Editor | Sonnet 4.6 | `medium` | `Bash`, `Write`, `Edit` | ~15–35 |
+| Q&A Search | Haiku 4.5 | `low` | `Bash` | ~15–25 |
+| Q&A Composer | Sonnet 4.6 | `medium` | `Agent`, `Bash`, `Write` | ~10–25 |
