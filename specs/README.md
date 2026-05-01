@@ -17,7 +17,8 @@ All agents run inside **nono sandboxes**. The AI never initiates a `nono run` �
 | [overview.md](overview.md) | Problem, goals, non-goals |
 | [data-model.md](data-model.md) | Vault folder structure, note frontmatter template, tag taxonomy, `review.md` format |
 | [architecture.md](architecture.md) | Multi-agent diagram, security constraints, nono sandbox permissions per agent, script responsibilities |
-| [agents.md](agents.md) | Orchestrator, file agent, and Q&A agent — responsibilities, output formats, staging file format, example decomposition |
+| [agents-index.md](agents-index.md) | Every AI agent and Python script — model selection, purpose, inputs/outputs, prompt file frontmatter format |
+| [agents.md](agents.md) | Detailed agent behaviour — responsibilities, staging file format, example decomposition |
 | [workflows.md](workflows.md) | Step-by-step: `ai inbox` (Steps 0–4) and `ai ask` |
 | [implementation.md](implementation.md) | Repo layout, dependencies, script interface, edge cases, open questions |
 
@@ -28,6 +29,7 @@ All agents run inside **nono sandboxes**. The AI never initiates a `nono run` �
 1. **[overview.md](overview.md)** — understand what we're building and what's out of scope
 2. **[data-model.md](data-model.md)** — understand the vault layout and all file formats before touching anything else
 3. **[architecture.md](architecture.md)** — understand the security model and what the script is responsible for
-4. **[agents.md](agents.md)** — understand each agent's inputs, outputs, and constraints
-5. **[workflows.md](workflows.md)** — understand the end-to-end sequence for each command
-6. **[implementation.md](implementation.md)** — edge cases and open questions to resolve before writing code
+4. **[agents-index.md](agents-index.md)** — understand which agents exist, which model each uses, and which tasks are Python scripts instead of AI
+5. **[agents.md](agents.md)** — understand each agent's detailed behaviour, inputs, outputs, and constraints
+6. **[workflows.md](workflows.md)** — understand the end-to-end sequence for each command
+7. **[implementation.md](implementation.md)** — edge cases and open questions to resolve before writing code

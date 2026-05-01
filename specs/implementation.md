@@ -8,8 +8,12 @@
 
 ### This repo contains
 
-- `scripts/` — Bash or Python scripts for `ai inbox`, `ai ask`, etc.
-- `prompts/` — System prompts and instruction files for Claude
+- `scripts/` — Python scripts and shell entrypoints
+  - `ai` — shell entrypoint (`ai inbox`, `ai ask`)
+  - `pre-screen.py` — detects bare URLs and empty inbox files before spawning agents
+  - `check-review.py` — parses `_meta/review.md`, checks which entries are answered
+  - `commit-staging.py` — validates and commits staging output to vault after agents complete
+- `prompts/` — Agent prompt files (one per agent); each carries YAML frontmatter with `model` and `agent` fields
 - `.claude/` — Claude Code hooks and settings (already present)
 - `specs/` — Spec files
 - `flake.nix` — Nix flake providing the reproducible dev shell
