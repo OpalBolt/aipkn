@@ -15,8 +15,17 @@
 
 ### Step 0 — Script pre-flight
 
-- Creates `_meta/review.md` if it does not exist
-- Reads `_meta/review.md` and computes `REVIEW_HAS_ANSWERS` (true if any entry has a non-empty `> Answer:` line)
+1. Creates `_meta/review.md` if it does not exist
+2. Runs `pre-screen.py` against all inbox files:
+   - Bare URLs and empty/unreadable files are removed from the work list
+   - A review entry is written directly to `_meta/review.md` for each skipped file
+3. Runs `check-review.py` against the remaining inbox files, classifying each as:
+   - `ready` — no review entry; proceed normally
+   - `has-answers` — review entry exists and all `> Answer:` lines are filled; pass to orchestrator with `REVIEW_HAS_ANSWERS=true`
+   - `blocked` — review entry exists with at least one empty `> Answer:` line; skip this run entirely
+4. Prints how many files are ready, how many have answers to apply, and how many are blocked (with filenames)
+
+Only `ready` and `has-answers` files proceed to Step 1.
 
 ### Step 1 — Orchestrator (script launches nono session)
 
@@ -24,11 +33,9 @@
 nono run --read $VAULT -- claude --print "..." < orchestrator-prompt.md
 ```
 
-The orchestrator:
-1. Reads all files in `inbox/` (excluding `inbox/staging/`)
-2. For each file, reads its content and searches the vault for related topics
-3. Reads the `summary` property of search results to assess relevance without loading full note content
-4. Emits a JSON work plan to stdout (one entry per inbox file, listing related vault files)
+The script passes the filtered file list (ready + has-answers only) to the orchestrator in its prompt context. The orchestrator:
+1. For each file in the list, reads its content and spawns a Quick Search sub-agent (in parallel via the `Agent` tool)
+2. Collects search results and emits a JSON work plan to stdout — one entry per file
 
 The script captures stdout and validates every path in the JSON: must be within `$VAULT`, no path traversal, no unexpected locations.
 
@@ -47,10 +54,10 @@ nono run \
   -- claude --print "..." < file-agent-prompt.md
 ```
 
-The script injects `REVIEW_HAS_ANSWERS` and the work plan entry into each agent's prompt context before spawning.
+The script injects the per-file `REVIEW_HAS_ANSWERS` flag and the work plan entry into each agent's prompt context. The `--allow-file $VAULT/_meta/review.md` grant is included in the nono invocation only when `REVIEW_HAS_ANSWERS=true` for that file.
 
-Each file agent:
-1. If `REVIEW_HAS_ANSWERS` is `true`: reads `_meta/review.md`, applies any answered entries for its inbox file, removes those entries
+Each editor agent:
+1. If `REVIEW_HAS_ANSWERS` is `true`: reads `_meta/review.md`, applies the answered entries for its inbox file, removes those entries
 2. **Detects bare URLs** — if the inbox file contains only a URL, writes `_review.md` to staging with the question: "Bare URL — please clip with Obsidian Web Clipper and re-add as Markdown."
 3. Reads the inbox file content
 4. Reads all related vault files listed in its work plan entry
