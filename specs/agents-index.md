@@ -40,14 +40,25 @@ Given the content of one inbox file, generates search queries and runs them agai
 
 | | |
 |---|---|
-| **Prompt file** | `.claude/agents/editor.md` |
+| **Agent file** | `.claude/agents/editor.md` |
 | **Model** | `claude-sonnet-4-6` |
 | **Spawned by** | User script (one `nono run` per inbox file, in parallel) |
-| **Runs** | Once per inbox file |
+| **Runs** | When `REVIEW_HAS_ANSWERS=false` |
 
-The main writing agent. Receives one inbox file, its related vault files, and any answered review questions. Decides how to decompose the content into atomic notes, writes each note to its staging subdirectory, and writes `_review.md` for any questions it cannot resolve. Prefers decomposition — one concept per note, cross-linked with `[[wikilinks]]`.
+The main writing agent for inbox files with no pending review answers. Reads the inbox file and all related vault files, decomposes content into atomic notes, and writes proposed output to staging. Has no access to `_meta/review.md`.
 
-Upgrade to `claude-opus-4-7` if output quality on complex multi-topic articles is insufficient.
+### Editor (with review)
+
+| | |
+|---|---|
+| **Agent file** | `.claude/agents/editor-with-review.md` |
+| **Model** | `claude-sonnet-4-6` |
+| **Spawned by** | User script (one `nono run` per inbox file, in parallel) |
+| **Runs** | When `REVIEW_HAS_ANSWERS=true` |
+
+Identical to editor but first reads `_meta/review.md`, applies answered questions for its inbox file, and removes those resolved entries before proceeding. Has `Edit` tool access to modify `review.md`.
+
+Upgrade either editor to `claude-opus-4-7` if output quality on complex multi-topic articles is insufficient.
 
 ---
 
@@ -126,6 +137,7 @@ maxTurns: 30
 |---|---|---|---|---|
 | Orchestrator | Sonnet 4.6 | `low` | `Agent` | 0 (delegates) |
 | Quick Search | Haiku 4.5 | `low` | `Bash` | ~10–20 |
-| Editor | Sonnet 4.6 | `medium` | `Bash`, `Write`, `Edit` | ~15–35 |
+| Editor | Sonnet 4.6 | `medium` | `Bash`, `Write` | ~15–35 |
+| Editor (with review) | Sonnet 4.6 | `medium` | `Bash`, `Write`, `Edit` | ~15–35 |
 | Q&A Search | Haiku 4.5 | `low` | `Bash` | ~15–25 |
 | Q&A Composer | Sonnet 4.6 | `medium` | `Agent`, `Bash`, `Write` | ~10–25 |
