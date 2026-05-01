@@ -9,7 +9,7 @@
 ### This repo contains
 
 - `scripts/` — Python scripts and shell entrypoints
-  - `ai` — shell entrypoint (`ai inbox`, `ai ask`)
+  - `vatic` — shell entrypoint (`vatic inbox`, `vatic ask`)
   - `pre-screen.py` — detects bare URLs and empty inbox files before spawning agents
   - `check-review.py` — parses `_meta/review.md`, checks which entries are answered
   - `commit-staging.py` — validates and commits staging output to vault after agents complete
@@ -35,15 +35,15 @@ Already installed. The CLI is the primary interface to the vault for search and 
 
 ### AI driver
 
-Claude Code executes the workflows. For `ai inbox` and `ai ask`, Claude is called with the relevant vault data and a task-specific prompt via `--print` mode (non-interactive).
+Claude Code executes the workflows. For `vatic inbox` and `vatic ask`, Claude is called with the relevant vault data and a task-specific prompt via `--print` mode (non-interactive).
 
 ### Script interface
 
 ```bash
-ai inbox              # Process all files in inbox/
-ai inbox --dry-run    # Show what would happen without writing
-ai ask "question"     # Q&A against the vault
-ai ask "question" --save  # Q&A + save result as a note
+vatic inbox              # Process all files in inbox/
+vatic inbox --dry-run    # Show what would happen without writing
+vatic ask "question"     # Q&A against the vault
+vatic ask "question" --save  # Q&A + save result as a note
 ```
 
 ---
@@ -66,7 +66,7 @@ ai ask "question" --save  # Q&A + save result as a note
 ## Open Questions
 
 1. **Vault path** — Where is the Obsidian vault on disk? This must be configured (env var or config file) before any script can run.
-2. **`ai` command entrypoint** — Is this a shell alias, a Python CLI, or a Bash script? Needs a decision before implementation starts.
+2. **`vatic` command entrypoint** — Is this a shell alias, a Python CLI, or a Bash script? Needs a decision before implementation starts.
 3. **Obsidian CLI exact commands** — Need to verify the exact syntax of the installed CLI (search, property read) before writing wrapper scripts.
 4. **Web Clipper output format** — What does Obsidian Web Clipper produce? If it already writes Markdown with frontmatter, the inbox processor may be able to reuse existing properties rather than regenerating them.
 5. **Merge vs. append policy** — When should AI merge into an existing note vs. append a new linked note? Needs a concrete heuristic.

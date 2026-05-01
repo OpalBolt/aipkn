@@ -19,7 +19,7 @@ vault/
     └── templates/  # Note templates
 ```
 
-`inbox/staging/` is a temporary working area used during inbox processing. Each file agent gets its own subdirectory here (e.g. `inbox/staging/abc123/`) and may write as many output files as the content requires — a single article may decompose into several atomic notes across multiple vault folders. The user-controlled script is the only thing that moves files from staging into the vault proper. Staging is always empty outside of an active `ai inbox` run.
+`inbox/staging/` is a temporary working area used during inbox processing. Each file agent gets its own subdirectory here (e.g. `inbox/staging/abc123/`) and may write as many output files as the content requires — a single article may decompose into several atomic notes across multiple vault folders. The user-controlled script is the only thing that moves files from staging into the vault proper. Staging is always empty outside of an active `vatic inbox` run.
 
 ---
 

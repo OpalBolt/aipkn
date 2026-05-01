@@ -14,8 +14,8 @@ This file lists every AI agent in the system, the prompt file it runs from, the 
 |---|---|
 | **Prompt file** | `prompts/orchestrator.md` |
 | **Model** | `claude-sonnet-4-6` |
-| **Spawned by** | User script (`ai inbox`) |
-| **Runs** | Once per `ai inbox` invocation |
+| **Spawned by** | User script (`vatic inbox`) |
+| **Runs** | Once per `vatic inbox` invocation |
 
 Reads all files in `inbox/`, understands their content, and spawns one Quick Search sub-agent per inbox file (in parallel via the `Agent` tool). Collects results from all sub-agents and emits a single JSON work plan to stdout.
 
@@ -58,7 +58,7 @@ Upgrade to `claude-opus-4-7` if output quality on complex multi-topic articles i
 | **Prompt file** | `prompts/qa-search.md` |
 | **Model** | `claude-haiku-4-5-20251001` |
 | **Spawned by** | Q&A Composer (via `Agent` tool) |
-| **Runs** | Once per `ai ask` invocation |
+| **Runs** | Once per `vatic ask` invocation |
 
 Given a question, generates search queries, runs them via the obsidian CLI, reads `summary` properties of results, and returns a ranked list of relevant vault file paths. Returns paths only — no file content loaded. Keeps context window small and cost low.
 
@@ -70,8 +70,8 @@ Given a question, generates search queries, runs them via the obsidian CLI, read
 |---|---|
 | **Prompt file** | `prompts/qa-composer.md` |
 | **Model** | `claude-sonnet-4-6` |
-| **Spawned by** | User script (`ai ask`) |
-| **Runs** | Once per `ai ask` invocation |
+| **Spawned by** | User script (`vatic ask`) |
+| **Runs** | Once per `vatic ask` invocation |
 
 Receives the user's question and the ranked file list from Q&A Search. Reads the full content of the top-ranked notes and composes a grounded answer with a Sources section. If `--save` is passed, writes output to its pre-created `queries/` slot.
 

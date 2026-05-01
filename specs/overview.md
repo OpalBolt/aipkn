@@ -11,7 +11,7 @@ Build a personal knowledge base on top of an existing Obsidian vault, where an A
 - You can ask natural-language questions and get answers with direct references to source notes
 - Everything operates from the terminal or Claude Code — no GUI required for the agent workflows
 
-This repo (`AI-knowledge`) is **tooling only** — scripts, prompts, and Claude config. The Obsidian vault lives in a separate directory (path TBD, must be configured).
+This repo (`vatic`) is **tooling only** — scripts, prompts, and Claude config. The Obsidian vault lives in a separate directory (path TBD, must be configured).
 
 ---
 

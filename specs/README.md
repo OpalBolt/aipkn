@@ -4,7 +4,7 @@ This directory contains the full specification for the AI-assisted knowledge bas
 
 ## System in one paragraph
 
-An `ai inbox` command processes files dropped into `vault/inbox/`. A user-controlled script drives the pipeline: it launches a read-only **orchestrator** agent that searches the vault and emits a JSON work plan, then launches one **file agent** per inbox item, each sandboxed to its own staging subdirectory. File agents decompose content into atomic notes and write proposed output to staging — they never touch the vault directly. The script validates and commits staging output to the vault, updates metadata, and surfaces any agent questions in `_meta/review.md` for the user to answer. A separate `ai ask` command runs a single read-only **Q&A agent** against the vault.
+A `vatic inbox` command processes files dropped into `vault/inbox/`. A user-controlled script drives the pipeline: it launches a read-only **orchestrator** agent that searches the vault and emits a JSON work plan, then launches one **file agent** per inbox item, each sandboxed to its own staging subdirectory. File agents decompose content into atomic notes and write proposed output to staging — they never touch the vault directly. The script validates and commits staging output to the vault, updates metadata, and surfaces any agent questions in `_meta/review.md` for the user to answer. A separate `vatic ask` command runs a single read-only **Q&A agent** against the vault.
 
 All agents run inside **nono sandboxes**. The AI never initiates a `nono run` — only the user-controlled script does.
 
@@ -19,7 +19,7 @@ All agents run inside **nono sandboxes**. The AI never initiates a `nono run` �
 | [architecture.md](architecture.md) | Multi-agent diagram, security constraints, nono sandbox permissions per agent, script responsibilities |
 | [agents-index.md](agents-index.md) | Every AI agent and Python script — model selection, purpose, inputs/outputs, prompt file frontmatter format |
 | [agents.md](agents.md) | Detailed agent behaviour — responsibilities, staging file format, example decomposition |
-| [workflows.md](workflows.md) | Step-by-step: `ai inbox` (Steps 0–4) and `ai ask` |
+| [workflows.md](workflows.md) | Step-by-step: `vatic inbox` (Steps 0–4) and `vatic ask` |
 | [implementation.md](implementation.md) | Repo layout, dependencies, script interface, edge cases, open questions |
 
 ---

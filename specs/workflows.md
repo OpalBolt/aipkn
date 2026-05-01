@@ -4,9 +4,9 @@
 
 ---
 
-## Workflow 1: Inbox Processing (`ai inbox`)
+## Workflow 1: Inbox Processing (`vatic inbox`)
 
-**Trigger:** User runs `ai inbox` from the terminal.
+**Trigger:** User runs `vatic inbox` from the terminal.
 
 **Inputs accepted into `inbox/`:**
 - Files dropped manually (`.md`, `.txt`)
@@ -51,7 +51,7 @@ nono run \
   --read-file $VAULT/inbox/$FILE \
   --allow $VAULT/inbox/staging/$AGENT_ID/ \
   --allow-file $VAULT/_meta/review.md \
-  -- claude --print "..." < file-agent-prompt.md
+  -- claude --print "..." < editor-prompt.md
 ```
 
 The script injects the per-file `REVIEW_HAS_ANSWERS` flag and the work plan entry into each agent's prompt context. The `--allow-file $VAULT/_meta/review.md` grant is included in the nono invocation only when `REVIEW_HAS_ANSWERS=true` for that file.
@@ -86,9 +86,9 @@ For each agent's staging subdirectory:
 
 ---
 
-## Workflow 2: Q&A (`ai ask`)
+## Workflow 2: Q&A (`vatic ask`)
 
-**Trigger:** `ai ask "your question"` in terminal.
+**Trigger:** `vatic ask "your question"` in terminal.
 
 ### Steps
 
