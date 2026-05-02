@@ -118,4 +118,4 @@ The user-controlled script runs outside any nono session and holds full filesyst
 
 ### Sandbox configuration
 
-The vault path and tooling repo path are set once in a `.env` file (or exported shell variables) and referenced as `$VAULT` and `$TOOLING_REPO` in all nono invocations.
+The vault path and tooling repo path are stored in `~/.config/vatic/config.toml` (XDG_CONFIG_HOME). The `vatic` CLI reads this config at startup and exposes `$VAULT` and `$TOOLING_REPO` to all nono invocations it constructs. Config is set via `vatic config set vault <path>` — no `.env` file, no manual sourcing.
