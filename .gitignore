@@ -54,3 +54,4 @@ dmypy.json
 result
 result-*
 .dirlocals
+.blip/
